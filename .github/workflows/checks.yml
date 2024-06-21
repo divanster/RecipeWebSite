@@ -1,21 +1,68 @@
----
-name: Checks
+name: CI/CD
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  test-lint:
-    name: Test and Lint
+  test-lint-backend:
+    name: Test and Lint Backend
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Test
-        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
-      - name: Lint
-        run: docker-compose run --rm app sh -c "flake8"
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Test Backend
+        run: docker-compose run --rm backend sh -c "python manage.py wait_for_db && python manage.py test"
+
+      - name: Lint Backend
+        run: docker-compose run --rm backend sh -c "flake8"
+
+  test-lint-web:
+    name: Test and Lint Web Frontend
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: cd WebFrontend && npm install
+
+      - name: Test Web Frontend
+        run: cd WebFrontend && npm test
+
+      - name: Lint Web Frontend
+        run: cd WebFrontend && npx eslint . --ext .js,.jsx
+
+  test-lint-mobile:
+    name: Test and Lint Mobile Frontend
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: cd MobileFrontend && npm install
+
+      - name: Test Mobile Frontend
+        run: cd MobileFrontend && npm test
+
+      - name: Lint Mobile Frontend
+        run: cd MobileFrontend && npx eslint . --ext .js,.jsx,.ts,.tsx
