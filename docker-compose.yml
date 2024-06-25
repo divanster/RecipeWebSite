@@ -4,8 +4,17 @@ services:
   backend:
     build:
       context: ./backend
+      args:
+        - DEV=true
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/app:/app
+      - dev-static-data:/vol/web
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
@@ -28,18 +37,20 @@ services:
       context: ./WebFrontend
     ports:
       - "3000:3000"
+    volumes:
+      - ./WebFrontend:/app
     environment:
-      - REACT_APP_API_URL=http://localhost:8000/api
+      - CHOKIDAR_USEPOLLING=true
 
   mobile:
     build:
       context: ./MobileFrontend
-    ports:
-      - "8081:8081"
     volumes:
       - ./MobileFrontend:/app
+    command: ["npx", "react-native", "start"]
     environment:
-      - REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
 
 volumes:
   dev-db-data:
+  dev-static-data:
