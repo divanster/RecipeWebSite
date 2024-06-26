@@ -1,45 +1,67 @@
+// src/screens/RegisterScreen.tsx
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import API from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../services/axiosConfig';
 
 const RegisterScreen: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const history = useHistory();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const response = await API.post('user/register/', { username, password, email });
-      localStorage.setItem('token', response.data.token);
-      history.push('/recipes');
+      const response = await axiosInstance.post('user/create/', { email, password, name });
+      if (response.status === 201) {
+        navigate('/login');
+      }
     } catch (error) {
-      console.error('Registration failed', error);
+      setError('Registration failed');
     }
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleRegister}>Register</button>
+    <div className="container">
+      <h2 className="my-4">Register</h2>
+      {error && <p className="text-danger">{error}</p>}
+      <form onSubmit={handleRegister}>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">Name</label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="form-control"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">Register</button>
+      </form>
     </div>
   );
 };

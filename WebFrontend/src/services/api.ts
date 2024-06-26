@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api/',
 });
 
 API.interceptors.request.use(
@@ -16,5 +16,10 @@ API.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export const login = async (email: string, password: string) => {
+  const response = await API.post('user/token/', { email, password });
+  return response.data;
+};
 
 export default API;

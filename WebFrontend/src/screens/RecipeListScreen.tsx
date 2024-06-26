@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import axiosInstance from '../services/axiosConfig';
 import { Link } from 'react-router-dom';
-import API from '../services/api';
+import { Button, Spinner } from 'react-bootstrap';
 
 interface Recipe {
   id: number;
@@ -13,18 +14,20 @@ const RecipeListScreen: React.FC = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await API.get('recipe/recipes/');
+        const response = await axiosInstance.get<Recipe[]>('/recipes/');
         setRecipes(response.data);
       } catch (error) {
-        console.error('Failed to fetch recipes:', error);
+        console.error('Error fetching recipes:', error);
       }
     };
+
     fetchRecipes();
   }, []);
 
   return (
     <div>
       <h1>Recipes</h1>
+      <Button variant="primary">Bootstrap Button</Button>
       <ul>
         {recipes.map((recipe) => (
           <li key={recipe.id}>

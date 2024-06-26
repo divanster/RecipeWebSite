@@ -1,6 +1,12 @@
 module.exports = {
-  root: true,
   parser: '@typescript-eslint/parser',
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'react-hooks',
+    'jsx-a11y',
+    'jest'
+  ],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -9,13 +15,19 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:jest/recommended'
   ],
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'jsx-a11y', 'jest'],
   rules: {
-    // Add any custom rules here
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off'
   },
   settings: {
     react: {
       version: 'detect'
     }
+  },
+  env: {
+    browser: true,
+    node: true,
+    es2020: true,
+    jest: true
   }
 };

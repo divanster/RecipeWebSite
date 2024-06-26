@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 services:
   backend:
@@ -39,15 +39,6 @@ services:
       - "3000:3000"
     volumes:
       - ./WebFrontend:/app
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-
-  mobile:
-    build:
-      context: ./MobileFrontend
-    volumes:
-      - ./MobileFrontend:/app
-    command: ["npx", "react-native", "start"]
     environment:
       - CHOKIDAR_USEPOLLING=true
 
