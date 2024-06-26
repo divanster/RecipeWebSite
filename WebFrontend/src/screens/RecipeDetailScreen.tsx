@@ -1,44 +1,38 @@
 // src/screens/RecipeDetailScreen.tsx
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../services/axiosConfig';
 import { useParams } from 'react-router-dom';
-
-interface Tag {
-  id: number;
-  name: string;
-}
-
-interface Ingredient {
-  id: number;
-  name: string;
-}
+import axiosInstance from '../services/axiosConfig';
 
 interface Recipe {
   id: number;
   title: string;
   description: string;
   time_minutes: number;
-  price: number;
-  tags: Tag[];
-  ingredients: Ingredient[];
+  price: string;
+  // Add other relevant fields
 }
 
 const RecipeDetailScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await axiosInstance.get<Recipe>(`/recipes/${id}/`);
+        const response = await axiosInstance.get<Recipe>(`/recipe/recipes/${id}/`);
         setRecipe(response.data);
       } catch (error) {
-        console.error('Error fetching recipe:', error);
+        setError('Error fetching recipe details.');
       }
     };
 
     fetchRecipe();
   }, [id]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   if (!recipe) {
     return <div>Loading...</div>;
@@ -48,20 +42,9 @@ const RecipeDetailScreen: React.FC = () => {
     <div>
       <h1>{recipe.title}</h1>
       <p>{recipe.description}</p>
-      <p>Time: {recipe.time_minutes} minutes</p>
+      <p>Time to cook: {recipe.time_minutes} minutes</p>
       <p>Price: ${recipe.price}</p>
-      <h3>Tags</h3>
-      <ul>
-        {recipe.tags.map((tag) => (
-          <li key={tag.id}>{tag.name}</li>
-        ))}
-      </ul>
-      <h3>Ingredients</h3>
-      <ul>
-        {recipe.ingredients.map((ingredient) => (
-          <li key={ingredient.id}>{ingredient.name}</li>
-        ))}
-      </ul>
+      {/* Add other relevant fields */}
     </div>
   );
 };

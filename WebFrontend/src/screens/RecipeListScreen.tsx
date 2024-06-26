@@ -1,7 +1,8 @@
+// src/screens/RecipeListScreen.tsx
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../services/axiosConfig';
+import axiosInstance from '../services/axiosConfig'; // Ensure this path is correct
 import { Link } from 'react-router-dom';
-import { Button, Spinner } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
 interface Recipe {
   id: number;
@@ -14,7 +15,7 @@ const RecipeListScreen: React.FC = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axiosInstance.get<Recipe[]>('/recipes/');
+        const response = await axiosInstance.get<Recipe[]>('recipe/recipes/');
         setRecipes(response.data);
       } catch (error) {
         console.error('Error fetching recipes:', error);
@@ -27,7 +28,7 @@ const RecipeListScreen: React.FC = () => {
   return (
     <div>
       <h1>Recipes</h1>
-      <Button variant="primary">Bootstrap Button</Button>
+      <Button variant="primary">Wonder Button</Button>
       <ul>
         {recipes.map((recipe) => (
           <li key={recipe.id}>
