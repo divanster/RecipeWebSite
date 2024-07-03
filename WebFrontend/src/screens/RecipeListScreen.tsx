@@ -17,17 +17,21 @@ const RecipeListScreen: React.FC = () => {
   const [description, setDescription] = useState('');
   const [timeMinutes, setTimeMinutes] = useState('');
   const [price, setPrice] = useState('');
+  const [nextPage, setNextPage] = useState<string | null>(null);
+  const [previousPage, setPreviousPage] = useState<string | null>(null);
+
+  const fetchRecipes = async (url = '/recipe/recipes/') => {
+    try {
+      const response = await axiosInstance.get(url);
+      setRecipes(response.data.results);
+      setNextPage(response.data.next);
+      setPreviousPage(response.data.previous);
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await axiosInstance.get<Recipe[]>('/recipe/recipes/');
-        setRecipes(response.data);
-      } catch (error) {
-        console.error('Error fetching recipes:', error);
-      }
-    };
-
     fetchRecipes();
   }, []);
 
@@ -51,6 +55,12 @@ const RecipeListScreen: React.FC = () => {
     }
   };
 
+  const handlePageChange = (url: string | null) => {
+    if (url) {
+      fetchRecipes(url);
+    }
+  };
+
   return (
     <Container>
       <h1 className="my-4">Recipes</h1>
@@ -61,6 +71,22 @@ const RecipeListScreen: React.FC = () => {
           </li>
         ))}
       </ul>
+      <div className="d-flex justify-content-between">
+        <Button
+          variant="secondary"
+          onClick={() => handlePageChange(previousPage)}
+          disabled={!previousPage}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => handlePageChange(nextPage)}
+          disabled={!nextPage}
+        >
+          Next
+        </Button>
+      </div>
       <h2 className="mb-4">Add a New Recipe</h2>
       <Form onSubmit={handleAddRecipe}>
         <Row className="mb-3">
