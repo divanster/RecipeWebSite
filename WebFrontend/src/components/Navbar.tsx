@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">RecipeApp</Link>
         <div className="collapse navbar-collapse">
