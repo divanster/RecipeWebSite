@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../services/axiosConfig';
 import { Button, Form } from 'react-bootstrap';
+import StarRatings from 'react-star-ratings';
 
 interface Recipe {
   id: number;
@@ -49,11 +50,10 @@ const RecipeDetailScreen: React.FC = () => {
     }
   };
 
-  const handleRate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRate = async (newRating: number) => {
     if (recipe) {
       try {
-        await axiosInstance.post(`/recipe/recipes/${id}/rate/`, { score: rating });
+        await axiosInstance.post(`/recipe/recipes/${id}/rate/`, { score: newRating });
         setRating(0);  // Clear the rating after submission
         fetchRecipe();
       } catch (error) {
@@ -102,26 +102,18 @@ const RecipeDetailScreen: React.FC = () => {
       <Button variant="primary" onClick={handleLike}>
         {recipe.is_liked ? 'Unlike' : 'Like'}
       </Button>
-      <Form onSubmit={handleRate} className="mt-4">
-        <Form.Group controlId="rating">
-          <Form.Label>Rate this recipe</Form.Label>
-          <Form.Control
-            as="select"
-            value={rating}
-            onChange={(e) => setRating(parseInt(e.target.value))}
-          >
-            <option value={0}>Select a rating</option>
-            {[1, 2, 3, 4, 5].map((score) => (
-              <option key={score} value={score}>
-                {score}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit Rating
-        </Button>
-      </Form>
+      <div className="mt-4">
+        <Form.Label>Rate this recipe</Form.Label>
+        <StarRatings
+          rating={rating}
+          starRatedColor="gold"
+          changeRating={handleRate}
+          numberOfStars={5}
+          name='rating'
+          starDimension="30px"
+          starSpacing="5px"
+        />
+      </div>
       <Form onSubmit={handleComment} className="mt-4">
         <Form.Group controlId="comment">
           <Form.Label>Add a Comment</Form.Label>

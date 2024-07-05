@@ -19,12 +19,17 @@ const Navbar: React.FC = () => {
               <Link className="nav-link" to="/">Home</Link>
             </li>
             {isAuthenticated && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/create-recipe">Create Recipe</Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/create-recipe">Create Recipe</Link>
+                </li>
+              </>
             )}
           </ul>
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ml-auto">
+            <li className="nav-item mx-2">
+              <a className="nav-link" href="http://127.0.0.1:8000/api/docs/" target="_blank" rel="noopener noreferrer">API Docs</a>
+            </li>
             {isAuthenticated ? (
               <li className="nav-item">
                 <button className="btn btn-link nav-link" onClick={logout}>Logout</button>
