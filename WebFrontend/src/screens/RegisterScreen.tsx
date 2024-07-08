@@ -1,4 +1,3 @@
-// src/screens/RegisterScreen.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../services/axiosConfig';
@@ -13,12 +12,16 @@ const RegisterScreen: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post('user/create/', { email, password, name });
+      const response = await axiosInstance.post('/api/user/create/', { email, password, name });
       if (response.status === 201) {
         navigate('/login');
       }
-    } catch (error) {
-      setError('Registration failed');
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.email) {
+        setError(error.response.data.email[0]);
+      } else {
+        setError('Registration failed');
+      }
     }
   };
 

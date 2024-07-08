@@ -8,6 +8,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
+import ProfileScreen from './screens/ProfileScreen';
 import './App.css';
 
 const App: React.FC = () => {
@@ -22,6 +23,7 @@ const App: React.FC = () => {
             <Route path="/register" element={<RegisterScreen />} />
             <Route path="/recipes/:id" element={<RecipeDetailScreen />} />
             <Route path="/create-recipe" element={<RecipeCreateScreen />} />
+            <Route path="/profile" element={<ProfileScreen />} />
           </Routes>
         </div>
       </AuthProvider>

@@ -5,6 +5,11 @@ import axiosInstance from '../services/axiosConfig';
 import { Button, Form } from 'react-bootstrap';
 import StarRatings from 'react-star-ratings';
 
+interface User {
+  id: number;
+  name: string;
+}
+
 interface Recipe {
   id: number;
   title: string;
@@ -14,6 +19,7 @@ interface Recipe {
   is_liked: boolean;
   average_rating: number;
   ratings_count: number;
+  user: User;
   ratings: { score: number; user: number }[];
   comments: { id: number; content: string; user: number; created_at: string }[];
 }
@@ -99,6 +105,7 @@ const RecipeDetailScreen: React.FC = () => {
       <p>Time to cook: {recipe.time_minutes} minutes</p>
       <p>Price: ${recipe.price}</p>
       <p>Average Rating: {recipe.average_rating} ({recipe.ratings_count} ratings)</p>
+      <p>Posted by: {recipe.user.name}</p>
       <Button variant="primary" onClick={handleLike}>
         {recipe.is_liked ? 'Unlike' : 'Like'}
       </Button>

@@ -23,6 +23,9 @@ const Navbar: React.FC = () => {
                 <li className="nav-item">
                   <Link className="nav-link" to="/create-recipe">Create Recipe</Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/profile">Profile</Link> {/* Added Profile link */}
+                </li>
               </>
             )}
           </ul>
