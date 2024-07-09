@@ -1,4 +1,3 @@
-// src/screens/ProfileScreen.tsx
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../services/axiosConfig';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +7,8 @@ interface User {
   id: number;
   name: string;
   email: string;
-  followers: number[];
-  following: number[];
+  followers_count: number;
+  following_count: number;
 }
 
 interface Recipe {
@@ -27,7 +26,7 @@ const ProfileScreen: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axiosInstance.get('/profile/');
+        const response = await axiosInstance.get('/user/profile/');
         setProfile(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -37,9 +36,14 @@ const ProfileScreen: React.FC = () => {
     const fetchRecipes = async () => {
       try {
         const response = await axiosInstance.get('/recipe/recipes/');
-        setRecipes(response.data);
+        if (Array.isArray(response.data)) {
+          setRecipes(response.data);
+        } else {
+          setRecipes([]);  // If the response is not an array, set recipes to an empty array
+        }
       } catch (error) {
         console.error('Error fetching recipes:', error);
+        setRecipes([]);  // Ensure recipes is always an array
       }
     };
 
@@ -57,8 +61,8 @@ const ProfileScreen: React.FC = () => {
               <Card.Text>
                 <strong>Name:</strong> {profile.name}<br />
                 <strong>Email:</strong> {profile.email}<br />
-                <strong>Followers:</strong> {profile.followers.length}<br />
-                <strong>Following:</strong> {profile.following.length}
+                <strong>Followers:</strong> {profile.followers_count ?? 0}<br />
+                <strong>Following:</strong> {profile.following_count ?? 0}
               </Card.Text>
             </Card.Body>
           </Card>
